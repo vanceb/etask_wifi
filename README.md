@@ -10,7 +10,7 @@ Include this repository as a submodule in your project, or just download as a li
 ~~~c
 #include <etask_wifi.h>
 
-task_handle_t wifi_task;
+TaskHandle_t wifi_task;
 
 void setup() {
   ...
