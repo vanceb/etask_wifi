@@ -18,7 +18,7 @@ void setup() {
   xTaskCreate(
     etask_wifi,
     "WiFi_Task",
-    1500,
+    5000,
     NULL,
     0,
     &wifi_task

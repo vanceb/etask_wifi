@@ -43,6 +43,7 @@ void etask_wifi(void *parameter)
     unsigned long currentMillis = 0;
     unsigned long previousMillis = 0;
     const unsigned long interval = 30000;
+    uint8_t fails = 0;
 
     // Infinite loop - designed to run as an RTOS task
     for (;;)
@@ -50,12 +51,21 @@ void etask_wifi(void *parameter)
         // Make sure WiFi is connected
         currentMillis = millis();
         // if WiFi is down, try reconnecting
-        if ((WiFi.status() != WL_CONNECTED) {
-            if (currentMillis - previousMillis >=interval)) {
+        if (WiFi.status() != WL_CONNECTED) {
+            if (currentMillis - previousMillis >=interval) {
                 Serial.print(millis());
                 Serial.println("Reconnecting to WiFi...");
                 WiFi.disconnect();
-                WiFi.reconnect();
+                if (WiFi.reconnect() != ESP_OK) {
+                    fails += 1;
+                    if (fails >= 5) {
+                        Serial.println("Failed to reconnect to wifi - rebooting!");
+                        delay(5000);
+                        ESP.restart();
+                    } 
+                } else {
+                    fails = 0;
+                }
                 previousMillis = currentMillis;
             }
         } else {

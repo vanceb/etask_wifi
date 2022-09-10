@@ -19,6 +19,10 @@ lib_deps =
 #define NTP_UPDATE_INTERVAL 15  // minutes
 #define NTP_LOOP_DELAY 30000    // ms
 
+extern TimeChangeRule BST; // British Summer Time
+extern TimeChangeRule GMT;  // Standard Time
+extern Timezone UK;
+
 /* FreeRTOS Task to manage WiFi and keep time updated by NTP */
 void etask_wifi(void * parameter);
 
