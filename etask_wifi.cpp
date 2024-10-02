@@ -19,20 +19,34 @@ void etask_wifi(void *parameter)
     // Set up Wifi - Using WiFi Manager
     // WiFiManager
     // Local intialization. Once its business is done, there is no need to keep it around
-    WiFiManager wifiManager;
-    // reset saved settings
-    // wifiManager.resetSettings();
+    WiFiManager wm;
+    bool result;
+
+    wm.resetSettings(); // reset saved settings (Testing Purposes)
+    wm.setConnectTimeout(20); // how long to try to connect for before continuing
+    wm.setCaptivePortalEnable(true); // enable captive portal redirection
+    wm.setConfigPortalTimeout(60); // auto close configportal after n seconds
+    wm.setAPClientCheck(true); // unless client connected to softap
+
 
     // fetches ssid and pass from eeprom and tries to connect
     // if it does not connect it starts an access point with the specified name
     // here  "ESP Base"
-    // and goes into a blocking loop awaiting configuration
-    wifiManager.autoConnect("ESP Base");
+    // and goes into a blocking loop awaiting configuration or timeout
+    result = wm.autoConnect("ESP Base");
 
-    // if you get here you have connected to the WiFi
-    Serial.println("connected...yeey :)");
+    if(result) {
+        // if you get here you have connected to the WiFi
+        Serial.println("connected...yeey :)");
+    } else {
+        // Not connected, so reboot
+        // Gives chance for wifi to come back up after power cycle
+        Serial.println("Failed to connect to WiFi, rebooting");
+        delay(5000);
+        ESP.restart();
+    }
 
-
+    // Set up NTP
     WiFiUDP ntpUDP;
     int UTCOffset = 0; // Set time to UTC - convert to local using Timezone
     NTPClient ntp(ntpUDP, NTP_SERVER, UTCOffset * 60 * 60, NTP_UPDATE_INTERVAL * 60 * 1000);
