@@ -22,7 +22,7 @@ void etask_wifi(void *parameter)
     WiFiManager wm;
     bool result;
 
-    wm.resetSettings(); // reset saved settings (Testing Purposes)
+    //wm.resetSettings(); // reset saved settings (Testing Purposes)
     wm.setConnectTimeout(20); // how long to try to connect for before continuing
     wm.setCaptivePortalEnable(true); // enable captive portal redirection
     wm.setConfigPortalTimeout(60); // auto close configportal after n seconds
